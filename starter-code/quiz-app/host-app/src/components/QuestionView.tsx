@@ -3,7 +3,7 @@
 // A IMPLEMENTER : question, choix, timer, compteur de reponses
 // ============================================================
 
-import type { QuizQuestion } from '@shared/index'
+import type { QuizQuestion } from '@quiz/shared-types'
 
 interface QuestionViewProps {
   /** La question en cours (sans correctIndex) */
@@ -35,6 +35,7 @@ interface QuestionViewProps {
  * (c'est purement visuel pour projeter au mur)
  */
 function QuestionView({ question, index, total, remaining, answerCount, totalPlayers }: QuestionViewProps) {
+  const timerClass = `countdown ${remaining <= 10 ? 'warning' : ''} ${remaining <= 3 ? 'danger' : ''}`
   return (
     <div className="phase-container">
       {/* TODO: En-tete "Question {index + 1} / {total}" */}
@@ -42,6 +43,36 @@ function QuestionView({ question, index, total, remaining, answerCount, totalPla
       {/* TODO: Texte de la question avec .question-text */}
       {/* TODO: Grille des 4 choix avec .choices-grid et .choice-card */}
       {/* TODO: Compteur "{answerCount} / {totalPlayers} reponses" */}
+     {/* En-tête */}
+      <div className="question-header">
+        Question {index + 1} / {total}
+      </div>
+
+      {/* Timer cercle */}
+      <div className={timerClass}>
+        <div className="countdown-circle">
+          {remaining}s
+        </div>
+      </div>
+
+      {/* Texte question */}
+      <div className="question-text">
+        {question.text}
+      </div>
+
+      {/* Grille 4 choix */}
+      <div className="choices-grid">
+        {question.choices.map((choice, choiceIndex) => (
+          <div key={choiceIndex} className="choice-card">
+            <strong>{String.fromCharCode(65 + choiceIndex)}</strong> {choice}
+          </div>
+        ))}
+      </div>
+
+      {/* Compteur réponses */}
+      <div className="answer-counter">
+        {answerCount} / {totalPlayers} réponses
+      </div>
     </div>
   )
 }

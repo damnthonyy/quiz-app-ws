@@ -17,7 +17,7 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../packages/shared-types/*"]
+      "@quiz/shared-types": ["../packages/shared-types"]
     }
   },
   "include": ["src"],

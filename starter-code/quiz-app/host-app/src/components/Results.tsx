@@ -30,6 +30,8 @@ interface ResultsProps {
  * Astuce : const maxCount = Math.max(...distribution, 1)
  */
 function Results({ correctIndex, distribution, choices, onNext }: ResultsProps) {
+    // Max pour % largeur (évite division par 0)
+  const maxCount = Math.max(...distribution, 1)
   return (
     <div className="phase-container">
       <div className="results-container">
@@ -39,6 +41,36 @@ function Results({ correctIndex, distribution, choices, onNext }: ResultsProps) 
         {/* TODO: Calculer la largeur proportionnelle de chaque barre */}
         {/* TODO: Afficher le nombre de reponses dans chaque barre */}
         {/* TODO: Bouton "Question suivante" */}
+        {/* 4 barres de résultats */}
+        {distribution.map((count, index) => {
+          const isCorrect = index === correctIndex
+          const width = `${(count / maxCount) * 100}%`
+          
+          return (
+            <div key={index} className="result-bar-container">
+              {/* Label A) choix (Bonne réponse) */}
+              <div className="result-bar-label">
+                <strong>{String.fromCharCode(65 + index)}</strong> {choices[index]}
+                {isCorrect && <span className="correct-label"> (Bonne réponse)</span>}
+              </div>
+              
+              {/* Barre */}
+              <div className="result-bar-wrapper">
+                <div 
+                  className={`result-bar ${isCorrect ? 'correct' : 'incorrect'}`}
+                  style={{ width }}
+                >
+                  <span>{count}</span>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+
+        {/* Next */}
+        <button className="btn-primary" onClick={onNext}>
+          Question suivante
+        </button>
       </div>
     </div>
   )

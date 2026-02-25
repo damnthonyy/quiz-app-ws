@@ -4,7 +4,7 @@
 // ============================================================
 
 import { useState } from 'react'
-import type { QuizQuestion } from '@shared/index'
+import type { QuizQuestion } from '@quiz/shared-types'
 
 interface AnswerScreenProps {
   /** La question en cours (sans correctIndex) */

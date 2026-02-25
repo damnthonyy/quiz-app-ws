@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@shared': path.resolve(__dirname, '../packages/shared-types'),
+      '@quiz/shared-types': path.resolve(__dirname, '../packages/shared-types'),
     },
   },
 })
