@@ -67,11 +67,16 @@ export class QuizRoom {
    */
   addPlayer(name: string, ws: WebSocket): string {
     // TODO: Generer un ID unique (ex: crypto.randomUUID() ou Math.random())
+    const playerId = crypto.randomUUID()
+    const player = {id: playerId, name, ws} as Player
     // TODO: Creer le Player et l'ajouter a this.players
+    this.players.set(playerId, player)
     // TODO: Initialiser le score a 0
+    this.scores.set(playerId, 0)
     // TODO: Envoyer 'joined' a tous les clients
+    this.broadcastToAll({type: 'joined', playerId, players: Array.from(this.players.values()).map(p => p.name)})
     // TODO: Retourner l'ID du joueur
-    return ''
+    return playerId
   }
 
   /**
@@ -154,7 +159,7 @@ export class QuizRoom {
    */
   private getPlayerWsList(): WebSocket[] {
     // TODO: Extraire les ws de this.players.values()
-    return []
+    return Array.from(this.players.values()).map(player => player.ws)
   }
 
   /**
@@ -162,7 +167,11 @@ export class QuizRoom {
    */
   private broadcastToAll(message: ServerMessage): void {
     // TODO: Envoyer au host si connecte
+    if (this.hostWs && this.hostWs.readyState === WebSocket.OPEN) {
+      send(this.hostWs, message)
+    }
     // TODO: Envoyer a tous les joueurs via broadcast()
+    broadcast(this.getPlayerWsList(), message);
   }
 
   /**
@@ -172,8 +181,11 @@ export class QuizRoom {
    */
   private broadcastQuestion(): void {
     // TODO: Recuperer la question courante
+    const question = this.questions[this.currentQuestionIndex]
     // TODO: Creer l'objet question SANS correctIndex (utiliser destructuring)
+    const { correctIndex,...questionWithoutCorrectIndex} = question
     // TODO: Envoyer a tous via broadcastToAll()
+    this.broadcastToAll({type: 'question', question:questionWithoutCorrectIndex as Omit<QuizQuestion, 'correctIndex'>, index: this.currentQuestionIndex, total: this.questions.length})
   }
 
   /**
