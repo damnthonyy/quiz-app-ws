@@ -26,6 +26,7 @@ interface LobbyProps {
  * .player-count, .player-list, .player-chip, .btn-start
  */
 function Lobby({ quizCode, players, onStart }: LobbyProps) {
+  const hasPlayers = players.length > 0
   return (
     <div className="phase-container">
       {/* TODO: Label "Code du quiz" avec classe .quiz-code-label */}
@@ -33,6 +34,32 @@ function Lobby({ quizCode, players, onStart }: LobbyProps) {
       {/* TODO: Afficher le nombre de joueurs */}
       {/* TODO: Liste des joueurs avec .player-list et .player-chip */}
       {/* TODO: Bouton Demarrer avec classe .btn-start, desactive si 0 joueurs */}
+      {/* Code quiz GRAND */}
+      <div className="quiz-code-label">Code du quiz</div>
+      <div className="quiz-code">{quizCode.toUpperCase()}</div>
+
+      {/* Compteur joueurs */}
+      <div className="player-count">
+        {players.length} joueur{players.length > 1 ? 's' : ''} connecté{players.length > 1 ? 's' : ''}
+      </div>
+
+      {/* Liste joueurs */}
+      <div className="player-list">
+        {players.map((player) => (
+          <div key={player} className="player-chip">
+            {player}
+          </div>
+        ))}
+      </div>
+
+      {/* Bouton START */}
+      <button
+        className="btn-start"
+        onClick={onStart}
+        disabled={!hasPlayers}
+      >
+        Démarrer le quiz
+      </button>
     </div>
   )
 }
