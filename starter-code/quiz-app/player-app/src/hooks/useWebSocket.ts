@@ -4,7 +4,7 @@
 // ============================================================
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import type { ClientMessage, ServerMessage } from '@shared/index'
+import type { ClientMessage, ServerMessage } from '@quiz/shared-types'
 
 type ConnectionStatus = 'connecting' | 'connected' | 'disconnected'
 

@@ -4,7 +4,7 @@
 // ============================================================
 import { useState, useEffect } from 'react'
 import { useWebSocket } from './hooks/useWebSocket'
-import type { QuizPhase, QuizQuestion, ServerMessage } from '@shared/index'
+import type { QuizPhase, QuizQuestion, ServerMessage } from '@quiz/shared-types'
 import CreateQuiz from './components/CreateQuiz'
 import Lobby from './components/Lobby'
 import QuestionView from './components/QuestionView'
@@ -33,17 +33,9 @@ function App() {
   useEffect(() => {
     if (!lastMessage) return
 
-    // TODO: Traiter chaque type de message du serveur
-    // Utiliser un switch sur lastMessage.type
-
     switch (lastMessage.type) {
       case 'sync': {
-        // TODO: Quand le serveur envoie un sync (apres host:create),
-        // extraire le quizCode de lastMessage.data et mettre a jour l'etat
-        // Changer la phase vers lastMessage.phase
-        const syncData = lastMessage.data as { quizCode: string; players: string[] };
-
-        console.log('SYNC reçu:', syncData);
+        const syncData = lastMessage.data as { quizCode: string; players?: string[] };
         setQuizCode(syncData.quizCode);
         setPlayers(syncData.players || []);
         setPhase(lastMessage.phase)
@@ -51,19 +43,11 @@ function App() {
       }
 
       case 'joined': {
-        // TODO: Mettre a jour la liste des joueurs avec lastMessage.players
-        console.log('JOINED:', lastMessage.players);
         setPlayers(lastMessage.players);
         break
       }
 
       case 'question': {
-        // TODO: Mettre a jour currentQuestion, questionIndex, questionTotal
-        // TODO: Initialiser remaining avec la duree du timer de la question
-        // TODO: Reinitialiser answerCount a 0
-        // TODO: Changer la phase en 'question'
-        console.log('QUESTION reçue:', lastMessage.question);
-
         setCurrentQuestion(lastMessage.question);
         setQuestionIndex(lastMessage.index);
         setQuestionTotal(lastMessage.total);
@@ -74,20 +58,11 @@ function App() {
       }
 
       case 'tick': {
-        // TODO: Mettre a jour remaining avec lastMessage.remaining
-        console.log('TICK :', lastMessage.remaining);
         setRemaining(lastMessage.remaining)
         break
       }
 
       case 'results': {
-        // TODO: Mettre a jour correctIndex, distribution
-        // TODO: Calculer answerCount (somme de distribution)
-        // TODO: Changer la phase en 'results'
-        console.log('Resultat :', {
-
-        });
-
         setCorrectIndex(lastMessage.correctIndex);
         setDistribution(lastMessage.distribution);
 
@@ -102,25 +77,18 @@ function App() {
       }
 
       case 'leaderboard': {
-        // TODO: Mettre a jour rankings avec lastMessage.rankings
-        // TODO: Changer la phase en 'leaderboard'
-        console.log('LEADERBOARD:', lastMessage.rankings);
         setRankings(lastMessage.rankings);
         setPhase('leaderboard');
         break
       }
 
       case 'ended': {
-        // TODO: Changer la phase en 'ended'
-        console.log('Quiz terminé !');
         setPhase('ended');
         break
       }
 
       case 'error': {
-        // TODO: Afficher l'erreur (console.error ou alert)
-        console.error('Erreur serveur:', lastMessage.message);
-        alert('Erreur: ' + lastMessage.message);  // ou toast
+        alert('Erreur: ' + lastMessage.message);
         break
       }
     }
@@ -130,31 +98,21 @@ function App() {
 
   /** Appele quand le host soumet le formulaire de creation */
   const handleCreateQuiz = (title: string, questions: QuizQuestion[]) => {
-    // TODO: Envoyer un message 'host:create' au serveur avec sendMessage
     sendMessage({
       type: 'host:create',
       title,
       questions
-    });
-    console.log('Envoyé host:create')
+    })
   }
 
   /** Appele quand le host clique sur "Demarrer" dans le lobby */
   const handleStart = () => {
-    // TODO: Envoyer un message 'host:start' au serveur
-    sendMessage({
-      type: 'host:start'
-    });
-    console.log('Envoyé host:start')
+    sendMessage({ type: 'host:start' })
   }
 
   /** Appele quand le host clique sur "Question suivante" */
   const handleNext = () => {
-    // TODO: Envoyer un message 'host:next' au serveur
-        sendMessage({
-      type: 'host:next'
-    });
-    console.log('Envoyé host:next')
+    sendMessage({ type: 'host:next' })
   }
 
   // --- Rendu par phase ---

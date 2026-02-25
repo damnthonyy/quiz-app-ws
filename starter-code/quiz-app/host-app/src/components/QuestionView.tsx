@@ -3,7 +3,7 @@
 // A IMPLEMENTER : question, choix, timer, compteur de reponses
 // ============================================================
 
-import type { QuizQuestion } from '@shared/index'
+import type { QuizQuestion } from '@quiz/shared-types'
 
 interface QuestionViewProps {
   /** La question en cours (sans correctIndex) */

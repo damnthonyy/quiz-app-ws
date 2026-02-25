@@ -4,7 +4,7 @@
 // ============================================================
 
 import { useState } from 'react'
-import type { QuizQuestion } from '@shared/index'
+import type { QuizQuestion } from '@quiz/shared-types'
 
 interface CreateQuizProps {
   /** Callback appele quand le formulaire est soumis */
