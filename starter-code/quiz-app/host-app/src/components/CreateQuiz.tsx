@@ -9,6 +9,8 @@ import type { QuizQuestion } from '@quiz/shared-types'
 interface CreateQuizProps {
   /** Callback appele quand le formulaire est soumis */
   onSubmit: (title: string, questions: QuizQuestion[]) => void
+  /** Si false, le bouton est desactive (serveur non connecte) */
+  isConnected?: boolean
 }
 
 /**
@@ -32,7 +34,7 @@ interface CreateQuizProps {
  * .question-card-header, .choices-inputs, .choice-input-group,
  * .btn-add-question, .btn-remove, .btn-primary
  */
-function CreateQuiz({ onSubmit }: CreateQuizProps) {
+function CreateQuiz({ onSubmit, isConnected = true }: CreateQuizProps) {
   // TODO: State pour le titre
   // TODO: State pour la liste des questions
   const [title, setTitle] = useState('')
@@ -70,6 +72,16 @@ function CreateQuiz({ onSubmit }: CreateQuizProps) {
     setQuestions(questions.filter(q => q.id !== id))
   }
 
+  const isFormComplete =
+    title.trim() !== '' &&
+    questions.length > 0 &&
+    questions.every(
+      (q) =>
+        q.text.trim() !== '' &&
+        q.choices.every((c) => c.trim() !== '') &&
+        q.choices[q.correctIndex]?.trim() !== ''
+    )
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // TODO: Valider que le titre n'est pas vide
@@ -104,6 +116,11 @@ function CreateQuiz({ onSubmit }: CreateQuizProps) {
   return (
     <div className="phase-container">
       <h1>Creer un Quiz</h1>
+      {!isConnected && (
+        <p className="connection-hint">
+          Démarrez le serveur (port 3001) pour créer un quiz.
+        </p>
+      )}
       <form className="create-form" onSubmit={handleSubmit}>
         {/* Titre */}
         <div className="form-group">
@@ -194,7 +211,12 @@ function CreateQuiz({ onSubmit }: CreateQuizProps) {
           >
             + Ajouter une question
           </button>
-          <button type="submit" className="btn-primary">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={!isConnected || !isFormComplete}
+            title={!isFormComplete ? 'Remplissez le titre et toutes les questions (texte + 4 choix)' : undefined}
+          >
             Créer le Quiz
           </button>
         </div>

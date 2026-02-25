@@ -98,6 +98,10 @@ function App() {
 
   /** Appele quand le host soumet le formulaire de creation */
   const handleCreateQuiz = (title: string, questions: QuizQuestion[]) => {
+    if (status !== 'connected') {
+      alert('Connexion au serveur perdue. Démarrez le serveur sur le port 3001.')
+      return
+    }
     sendMessage({
       type: 'host:create',
       title,
@@ -119,7 +123,12 @@ function App() {
   const renderPhase = () => {
     switch (phase) {
       case 'create':
-        return <CreateQuiz onSubmit={handleCreateQuiz} />
+        return (
+          <CreateQuiz
+            onSubmit={handleCreateQuiz}
+            isConnected={status === 'connected'}
+          />
+        )
 
       case 'lobby':
         return (
@@ -157,11 +166,14 @@ function App() {
 
       case 'ended':
         return (
-          <div className="phase-container">
+          <div className="phase-container ended-screen">
             <h1>Quiz termine !</h1>
-            <button className="btn-primary" onClick={() => setPhase('create')}>
-              Creer un nouveau quiz
-            </button>
+            <p className="ended-message">Merci d'avoir anime ce quiz.</p>
+            <div className="ended-actions">
+              <button className="btn-primary" onClick={() => setPhase('create')}>
+                Retour a l'accueil — Creer un nouveau quiz
+              </button>
+            </div>
           </div>
         )
 

@@ -91,6 +91,12 @@ body {
   color: #f1f5f9;
 }
 
+.connection-hint {
+  color: #f59e0b;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
 /* --- Quiz Code Display --- */
 .quiz-code {
   font-size: 4rem;
@@ -170,6 +176,24 @@ body {
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+.ended-screen .ended-message {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  margin-bottom: 1.5rem;
+}
+
+.ended-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.ended-actions .btn-primary {
+  min-width: 280px;
 }
 
 .btn-start {
