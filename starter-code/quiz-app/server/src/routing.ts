@@ -3,7 +3,7 @@
 // ============================================================
 
 import type { WebSocket } from 'ws'
-import type { ClientMessage } from '../../packages/shared-types'
+import type { ClientMessage } from '@quiz/shared-types'
 import { QuizRoom } from './QuizRoom'
 import { send, generateQuizCode } from './utils'
 

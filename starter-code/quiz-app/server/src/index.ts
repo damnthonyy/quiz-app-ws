@@ -4,7 +4,7 @@
 
 import { createServer } from 'http'
 import { WebSocketServer, WebSocket } from 'ws'
-import type { ClientMessage } from '../../packages/shared-types'
+import type { ClientMessage } from '@quiz/shared-types'
 import { send } from './utils'
 import { handleClientMessage, handleClose, type RoutingMaps } from './routing'
 import type { QuizRoom } from './QuizRoom'

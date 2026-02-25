@@ -4,7 +4,7 @@
 // ============================================================
 
 import WebSocket from 'ws'
-import type { QuizQuestion, QuizPhase, ServerMessage } from '../../packages/shared-types'
+import type { QuizQuestion, QuizPhase, ServerMessage } from '@quiz/shared-types'
 import { send, broadcast } from './utils'
 
 /** Represente un joueur connecte */

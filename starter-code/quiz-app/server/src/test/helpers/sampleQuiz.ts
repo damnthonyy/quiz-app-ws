@@ -1,4 +1,4 @@
-import type { QuizQuestion } from '../../../../packages/shared-types'
+import type { QuizQuestion } from '@quiz/shared-types'
 
 /** Question de quiz reutilisable pour les tests (timerSec: 10, correctIndex: 0) */
 export const sampleQuestion: QuizQuestion = {

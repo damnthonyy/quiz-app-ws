@@ -3,7 +3,7 @@
 // ============================================================
 
 import WebSocket from 'ws'
-import type { ServerMessage } from '../../packages/shared-types'
+import type { ServerMessage } from '@quiz/shared-types'
 
 /**
  * Envoie un message a un seul client WebSocket.
