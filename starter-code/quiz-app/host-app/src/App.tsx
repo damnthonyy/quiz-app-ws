@@ -2,7 +2,6 @@
 // Host App - Composant principal
 // A IMPLEMENTER : gestion des messages et routage par phase
 // ============================================================
-
 import { useState, useEffect } from 'react'
 import { useWebSocket } from './hooks/useWebSocket'
 import type { QuizPhase, QuizQuestion, ServerMessage } from '@shared/index'
@@ -42,11 +41,19 @@ function App() {
         // TODO: Quand le serveur envoie un sync (apres host:create),
         // extraire le quizCode de lastMessage.data et mettre a jour l'etat
         // Changer la phase vers lastMessage.phase
+        const syncData = lastMessage.data as { quizCode: string; players: string[] };
+
+        console.log('SYNC reçu:', syncData);
+        setQuizCode(syncData.quizCode);
+        setPlayers(syncData.players || []);
+        setPhase(lastMessage.phase)
         break
       }
 
       case 'joined': {
         // TODO: Mettre a jour la liste des joueurs avec lastMessage.players
+        console.log('JOINED:', lastMessage.players);
+        setPlayers(lastMessage.players);
         break
       }
 
@@ -55,11 +62,21 @@ function App() {
         // TODO: Initialiser remaining avec la duree du timer de la question
         // TODO: Reinitialiser answerCount a 0
         // TODO: Changer la phase en 'question'
+        console.log('QUESTION reçue:', lastMessage.question);
+
+        setCurrentQuestion(lastMessage.question);
+        setQuestionIndex(lastMessage.index);
+        setQuestionTotal(lastMessage.total);
+        setRemaining(lastMessage.question.timerSec);
+        setAnswerCount(0);
+        setPhase('question');
         break
       }
 
       case 'tick': {
         // TODO: Mettre a jour remaining avec lastMessage.remaining
+        console.log('TICK :', lastMessage.remaining);
+        setRemaining(lastMessage.remaining)
         break
       }
 
@@ -67,22 +84,43 @@ function App() {
         // TODO: Mettre a jour correctIndex, distribution
         // TODO: Calculer answerCount (somme de distribution)
         // TODO: Changer la phase en 'results'
+        console.log('Resultat :', {
+
+        });
+
+        setCorrectIndex(lastMessage.correctIndex);
+        setDistribution(lastMessage.distribution);
+
+        //Total
+        let total = 0;
+        for (const votes of lastMessage.distribution) {
+          total += votes;
+        }
+        setAnswerCount(total)
+        setPhase('results')
         break
       }
 
       case 'leaderboard': {
         // TODO: Mettre a jour rankings avec lastMessage.rankings
         // TODO: Changer la phase en 'leaderboard'
+        console.log('LEADERBOARD:', lastMessage.rankings);
+        setRankings(lastMessage.rankings);
+        setPhase('leaderboard');
         break
       }
 
       case 'ended': {
         // TODO: Changer la phase en 'ended'
+        console.log('Quiz terminé !');
+        setPhase('ended');
         break
       }
 
       case 'error': {
         // TODO: Afficher l'erreur (console.error ou alert)
+        console.error('Erreur serveur:', lastMessage.message);
+        alert('Erreur: ' + lastMessage.message);  // ou toast
         break
       }
     }
@@ -93,16 +131,30 @@ function App() {
   /** Appele quand le host soumet le formulaire de creation */
   const handleCreateQuiz = (title: string, questions: QuizQuestion[]) => {
     // TODO: Envoyer un message 'host:create' au serveur avec sendMessage
+    sendMessage({
+      type: 'host:create',
+      title,
+      questions
+    });
+    console.log('Envoyé host:create')
   }
 
   /** Appele quand le host clique sur "Demarrer" dans le lobby */
   const handleStart = () => {
     // TODO: Envoyer un message 'host:start' au serveur
+    sendMessage({
+      type: 'host:start'
+    });
+    console.log('Envoyé host:start')
   }
 
   /** Appele quand le host clique sur "Question suivante" */
   const handleNext = () => {
     // TODO: Envoyer un message 'host:next' au serveur
+        sendMessage({
+      type: 'host:next'
+    });
+    console.log('Envoyé host:next')
   }
 
   // --- Rendu par phase ---
